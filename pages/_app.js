@@ -5,7 +5,7 @@ import { Api } from "@/services/service";
 import "@/styles/globals.css";
 import { useRouter } from "next/router";
 import { createContext, useEffect, useState } from "react";
-// import IPInfo from 'ip-info-react';
+import IPInfo from 'ip-info-react';
 
 export const userContext = createContext();
 export const dataContext = createContext();
@@ -76,35 +76,34 @@ export default function App({ Component, pageProps }) {
 
   return (
     <>
-      {" "}
-      {/* <IPInfo> */}
-      <dataContext.Provider value={[data, setData]}>
-        <userContext.Provider value={[user, setUser]}>
-          <Loader open={open} />
-          <div className="fixed right-5 top-20 min-w-max z-50">
-            {!!toast.message && (
-              <Toaster type={toast.type} message={toast.message} />
-            )}
-          </div>
-          <Layout loader={setOpen} toaster={setToast}>
+      <IPInfo token={process.env.NEXT_PUBLIC_TOKEN}>
+        <dataContext.Provider value={[data, setData]}>
+          <userContext.Provider value={[user, setUser]}>
             <Loader open={open} />
-            <div className="fixed right-5 top-20 min-w-max">
+            <div className="fixed right-5 top-20 min-w-max z-50">
               {!!toast.message && (
                 <Toaster type={toast.type} message={toast.message} />
               )}
             </div>
-            {user && (
-              <Component
-                {...pageProps}
-                loader={setOpen}
-                toaster={setToast}
-                user={user}
-              />
-            )}
-          </Layout>
-        </userContext.Provider>{" "}
-      </dataContext.Provider>
-      {/* </IPInfo> */}
+            <Layout loader={setOpen} toaster={setToast}>
+              <Loader open={open} />
+              <div className="fixed right-5 top-20 min-w-max">
+                {!!toast.message && (
+                  <Toaster type={toast.type} message={toast.message} />
+                )}
+              </div>
+              {user && (
+                <Component
+                  {...pageProps}
+                  loader={setOpen}
+                  toaster={setToast}
+                  user={user}
+                />
+              )}
+            </Layout>
+          </userContext.Provider>
+        </dataContext.Provider>
+      </IPInfo>
     </>
   );
 }
