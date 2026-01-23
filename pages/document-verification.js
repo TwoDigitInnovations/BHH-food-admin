@@ -1,12 +1,133 @@
 import React, { useMemo, useState, useEffect, useContext } from "react";
 import Table from "@/components/table";
-import { FiEye, FiCheck, FiX, FiDownload } from "react-icons/fi";
+import { FiEye, FiCheck, FiX, FiDownload, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { Api } from "@/services/service";
 import { useRouter } from "next/router";
 import Swal from "sweetalert2";
 import { userContext } from "./_app";
 import isAuth from "@/components/isAuth";
 import moment from "moment";
+
+// Document Carousel Component
+const DocumentCarousel = ({ documents, onDownload }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const validDocuments = documents.filter(doc => doc.url);
+
+  if (validDocuments.length === 0) {
+    return (
+      <div className="text-center py-8">
+        <div className="text-6xl text-gray-400 mb-4">📄</div>
+        <p className="text-gray-600">No documents available</p>
+      </div>
+    );
+  }
+
+  const currentDoc = validDocuments[currentIndex];
+
+  const nextDocument = () => {
+    setCurrentIndex((prev) => (prev + 1) % validDocuments.length);
+  };
+
+  const prevDocument = () => {
+    setCurrentIndex((prev) => (prev - 1 + validDocuments.length) % validDocuments.length);
+  };
+
+  return (
+    <div className="space-y-4">
+      {/* Document Navigation */}
+      {validDocuments.length > 1 && (
+        <div className="flex items-center justify-between">
+          <button
+            onClick={prevDocument}
+            className="p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            <FiChevronLeft size={20} />
+          </button>
+          <div className="text-sm text-gray-600">
+            {currentIndex + 1} of {validDocuments.length} documents
+          </div>
+          <button
+            onClick={nextDocument}
+            className="p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            <FiChevronRight size={20} />
+          </button>
+        </div>
+      )}
+
+      {/* Document Label */}
+      <div className="text-center">
+        <h4 className="text-md font-medium text-gray-900 mb-2">
+          {currentDoc.label}
+          {currentDoc.required && <span className="text-red-500 ml-1">*</span>}
+        </h4>
+      </div>
+
+      {/* Document Preview */}
+      <div className="border-2 border-dashed border-gray-300 rounded-lg p-8">
+        {currentDoc.url.toLowerCase().includes('.pdf') ? (
+          <div className="text-center">
+            <div className="text-6xl text-red-500 mb-4">📄</div>
+            <p className="text-gray-600 mb-4">PDF Document</p>
+            <button
+              onClick={() => onDownload(currentDoc.url)}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+            >
+              <FiDownload size={16} />
+              View PDF
+            </button>
+          </div>
+        ) : (
+          <div className="text-center">
+            <img
+              src={currentDoc.url}
+              alt={currentDoc.label}
+              className="max-w-full max-h-96 mx-auto rounded-lg shadow-lg"
+              onLoad={(e) => {
+                // Image loaded successfully, hide fallback
+                const fallback = e.target.nextSibling;
+                if (fallback) fallback.style.display = 'none';
+              }}
+              onError={(e) => {
+                // Image failed to load, show fallback
+                e.target.style.display = 'none';
+                const fallback = e.target.nextSibling;
+                if (fallback) fallback.style.display = 'block';
+              }}
+            />
+            <div style={{ display: 'none' }} className="text-center mt-4">
+              <div className="text-6xl text-gray-400 mb-4">🖼️</div>
+              <p className="text-gray-600 mb-4">Image Preview Not Available</p>
+              <p className="text-sm text-gray-500 mb-4">The image may be encrypted or in an unsupported format</p>
+              <button
+                onClick={() => onDownload(currentDoc.url)}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+              >
+                <FiDownload size={16} />
+                Download Document
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Document Indicators */}
+      {validDocuments.length > 1 && (
+        <div className="flex justify-center space-x-2">
+          {validDocuments.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentIndex(index)}
+              className={`w-3 h-3 rounded-full transition-colors ${
+                index === currentIndex ? 'bg-blue-500' : 'bg-gray-300'
+              }`}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 function DocumentVerification(props) {
   const router = useRouter();
@@ -343,73 +464,63 @@ function DocumentVerification(props) {
 
               {/* Modal Body */}
               <div className="p-6 overflow-y-auto max-h-[60vh]">
-                <div className="text-center">
-                  {selectedUser.document ? (
-                    <div className="space-y-4">
-                      {/* Document Preview */}
-                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-8">
-                        {selectedUser.document.toLowerCase().includes('.pdf') ? (
-                          <div className="text-center">
-                            <div className="text-6xl text-red-500 mb-4">📄</div>
-                            <p className="text-gray-600 mb-4">PDF Document</p>
-                            <button
-                              onClick={() => downloadDocument(selectedUser.document)}
-                              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-                            >
-                              <FiDownload size={16} />
-                              View PDF
-                            </button>
-                          </div>
-                        ) : (
-                          <img
-                            src={selectedUser.document}
-                            alt="Document"
-                            className="max-w-full max-h-96 mx-auto rounded-lg shadow-lg"
-                            onError={(e) => {
-                              e.target.style.display = 'none';
-                              e.target.nextSibling.style.display = 'block';
-                            }}
-                          />
-                        )}
-                        <div style={{ display: 'none' }} className="text-center">
-                          <div className="text-6xl text-gray-400 mb-4">📄</div>
-                          <p className="text-gray-600 mb-4">Document Preview Not Available</p>
-                          <button
-                            onClick={() => downloadDocument(selectedUser.document)}
-                            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-                          >
-                            <FiDownload size={16} />
-                            Download Document
-                          </button>
-                        </div>
-                      </div>
+                {/* User Details Section */}
+                <div className="bg-gray-50 rounded-lg p-4 mb-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">User Information</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <span className="font-medium text-gray-700">Business Type:</span>
+                      <p className="text-gray-600 capitalize">{selectedUser.businessType || 'Not specified'}</p>
+                    </div>
+                    <div>
+                      <span className="font-medium text-gray-700">Legal Business Name:</span>
+                      <p className="text-gray-600">{selectedUser.legalBusinessName || 'Not provided'}</p>
+                    </div>
+                    <div>
+                      <span className="font-medium text-gray-700">Payment Method:</span>
+                      <p className="text-gray-600">{selectedUser.paymentMethod ? 'At time of service' : 'Not specified'}</p>
+                    </div>
+                    <div>
+                      <span className="font-medium text-gray-700">Terms Agreement:</span>
+                      <p className="text-gray-600">{selectedUser.termsAgreement ? 'Agreed' : 'Not agreed'}</p>
+                    </div>
+                    <div>
+                      <span className="font-medium text-gray-700">Registration Date:</span>
+                      <p className="text-gray-600">{moment(selectedUser.createdAt).format("DD/MM/YYYY HH:mm")}</p>
+                    </div>
+                    <div>
+                      <span className="font-medium text-gray-700">Current Status:</span>
+                      <p className={`inline-block px-2 py-1 text-xs font-medium rounded-full ml-2 ${
+                        selectedUser.documentVerified 
+                          ? 'bg-green-100 text-green-800' 
+                          : 'bg-yellow-100 text-yellow-800'
+                      }`}>
+                        {selectedUser.documentVerified ? 'Verified' : 'Pending Review'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
 
-                      {/* User Info */}
-                      <div className="bg-gray-50 rounded-lg p-4">
-                        <div className="grid grid-cols-2 gap-4 text-sm">
-                          <div>
-                            <span className="font-medium text-gray-700">Registration Date:</span>
-                            <p className="text-gray-600">{moment(selectedUser.createdAt).format("DD/MM/YYYY HH:mm")}</p>
-                          </div>
-                          <div>
-                            <span className="font-medium text-gray-700">Current Status:</span>
-                            <p className={`inline-block px-2 py-1 text-xs font-medium rounded-full ml-2 ${
-                              selectedUser.documentVerified 
-                                ? 'bg-green-100 text-green-800' 
-                                : 'bg-yellow-100 text-yellow-800'
-                            }`}>
-                              {selectedUser.documentVerified ? 'Verified' : 'Pending Review'}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="text-gray-500">
-                      <div className="text-6xl mb-4">📄</div>
-                      <p>No document available</p>
-                    </div>
-                  )}
+                {/* Documents Carousel Section */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-gray-900">Documents</h3>
+                  
+                  {/* Document Carousel */}
+                  <DocumentCarousel 
+                    documents={[
+                      {
+                        label: "Business License / Tax ID / Trade Certificate",
+                        url: selectedUser.document,
+                        required: true
+                      },
+                      ...(selectedUser.resellerPermit ? [{
+                        label: "Reseller Permit / Tax Exemption Certificate",
+                        url: selectedUser.resellerPermit,
+                        required: false
+                      }] : [])
+                    ]}
+                    onDownload={downloadDocument}
+                  />
                 </div>
               </div>
 

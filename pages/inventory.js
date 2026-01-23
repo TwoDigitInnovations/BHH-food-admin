@@ -209,7 +209,7 @@ function Inventory(props) {
     return (
       <div className="p-4 flex flex-col items-center justify-center">
         <p className="text-black text-base font-normal">
-          ${row?.original?.price_slot[0]?.our_price}
+          ${row?.original?.price_slot?.[0]?.our_price || "N/A"}
         </p>
       </div>
     );

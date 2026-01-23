@@ -94,16 +94,6 @@ function AddProduct(props) {
   const router = useRouter();
   const f = useRef(null);
 
-  const unitData = [
-    { name: "Lb", value: "lb" },
-    { name: "Litre", value: "litre" },
-    { name: "Each", value: "each" },
-    { name: "Piece", value: "piece" },
-    { name: "Pack", value: "pack" },
-    { name: "Case", value: "case" },
-    { name: "Bag", value: "bag" },
-  ];
-
   //   const handleChange = (e) => {
   //   const value = e.target.value;
   //   const array = value
@@ -1531,23 +1521,18 @@ function AddProduct(props) {
                             <label className="block text-gray-700 text-sm font-medium mb-1">
                               Unit
                             </label>
-                            <select
+                            <input
                               className="w-full bg-white border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#F38529]/30 focus:border-[#F38529] transition-colors text-black"
+                              type="text"
                               name="unit"
-                              value={slot.unit}
+                              value={slot.unit || ""}
+                              placeholder="Enter unit (e.g., lb, kg, piece, pack, etc.)"
                               required
                               onChange={(e) => {
                                 slot.unit = e.target.value;
                                 setAddProductsData({ ...addProductsData });
                               }}
-                            >
-                              <option value="">Select Unit</option>
-                              {unitData.map((unit) => (
-                                <option key={unit.value} value={unit.value}>
-                                  {unit.name}
-                                </option>
-                              ))}
-                            </select>
+                            />
                           </div>
 
                           <div>

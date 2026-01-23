@@ -31,7 +31,6 @@ import {
 import isAuth from "@/components/isAuth";
 import { userContext } from "./_app";
 import { BiCategory } from "react-icons/bi";
-import axios from "axios";
 
 const PRIMARY_COLOR = "#F38529";
 const PRIMARY_COLOR_LIGHT = "#FEE8D7";
@@ -39,14 +38,11 @@ const PRIMARY_COLOR_LIGHT = "#FEE8D7";
 function Home(props) {
   const router = useRouter();
   const [user, setUser] = useContext(userContext);
-  const [GetInTouchData, setGetInTouchData] = useState([]);
-  const [AllUsers, setAllUsers] = useState([]);
   const [productList, setProductList] = useState([]);
   const [lowStock, setLowStock] = useState([]);
   const [timeRange, setTimeRange] = useState("monthly"); // Only 'monthly' for now
   const [salesData, setSalesData] = useState([]);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
-
 
   const [topSellingProducts, setTopSellingProducts] = useState([
     {

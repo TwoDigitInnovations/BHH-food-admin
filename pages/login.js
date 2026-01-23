@@ -98,7 +98,7 @@ export default function Login(props) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-400 via-orange-500 to-yellow-400 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-orange-300 flex items-center justify-center p-4">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-black/20 bg-opacity-5">
         <div
