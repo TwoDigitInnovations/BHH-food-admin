@@ -131,6 +131,11 @@ function AddProduct(props) {
     short_description: "",
     tax_code: "",
     long_description: "",
+    // New inventory fields
+    warehouse: "",
+    bin: "",
+    batchNumber: "",
+    itemUOM: "",
     price_slot: [
       {
         value: 0,
@@ -217,6 +222,11 @@ function AddProduct(props) {
             other_price: res?.data?.other_price,
             our_price: res?.data?.our_price,
             unit: res?.data?.price_slot[0]?.unit,
+            // Load new inventory fields
+            warehouse: res?.data?.warehouse || "",
+            bin: res?.data?.bin || "",
+            batchNumber: res?.data?.batchNumber || "",
+            itemUOM: res?.data?.itemUOM || "",
             isShipmentAvailable: res?.data?.isShipmentAvailable,
             isReturnAvailable: res?.data?.isReturnAvailable,
             isNextDayDeliveryAvailable: res?.data?.isNextDayDeliveryAvailable,
@@ -296,6 +306,11 @@ function AddProduct(props) {
             manufactureradd: "",
             short_description: "",
             long_description: "",
+            // Reset new inventory fields
+            warehouse: "",
+            bin: "",
+            batchNumber: "",
+            itemUOM: "",
             price_slot: [
               {
                 value: 0,
@@ -363,6 +378,11 @@ function AddProduct(props) {
             short_description: "",
             // gender: "",
             long_description: "",
+            // Reset new inventory fields
+            warehouse: "",
+            bin: "",
+            batchNumber: "",
+            itemUOM: "",
             price_slot: [
               {
                 value: 0,
@@ -869,6 +889,108 @@ function AddProduct(props) {
                     />
                   </div>
                 </div>
+
+                {/* New Inventory Fields */}
+                <div className="mb-4">
+                  <p className="text-black text-base font-medium pb-2">
+                    Warehouse (WH)
+                  </p>
+                  <div className="relative">
+                    <input
+                      className="bg-transparent w-full md:h-[46px] h-[40px] pl-12 pr-5 border border-newblack rounded-[10px] outline-none text-black text-base font-light"
+                      type="text"
+                      placeholder="Warehouse"
+                      value={addProductsData.warehouse}
+                      onChange={(e) => {
+                        setAddProductsData({
+                          ...addProductsData,
+                          warehouse: e.target.value,
+                        });
+                      }}
+                    />
+                    <img
+                      className="w-[18px] h-[18px] absolute md:top-[13px] top-[10px] left-5"
+                      src="/box-add.png"
+                      alt="icon"
+                    />
+                  </div>
+                </div>
+
+                <div className="mb-4">
+                  <p className="text-black text-base font-medium pb-2">
+                    BIN
+                  </p>
+                  <div className="relative">
+                    <input
+                      className="bg-transparent w-full md:h-[46px] h-[40px] pl-12 pr-5 border border-newblack rounded-[10px] outline-none text-black text-base font-light"
+                      type="text"
+                      placeholder="BIN"
+                      value={addProductsData.bin}
+                      onChange={(e) => {
+                        setAddProductsData({
+                          ...addProductsData,
+                          bin: e.target.value,
+                        });
+                      }}
+                    />
+                    <img
+                      className="w-[18px] h-[18px] absolute md:top-[13px] top-[10px] left-5"
+                      src="/box-add.png"
+                      alt="icon"
+                    />
+                  </div>
+                </div>
+
+                <div className="mb-4">
+                  <p className="text-black text-base font-medium pb-2">
+                    Batch Number
+                  </p>
+                  <div className="relative">
+                    <input
+                      className="bg-transparent w-full md:h-[46px] h-[40px] pl-12 pr-5 border border-newblack rounded-[10px] outline-none text-black text-base font-light"
+                      type="text"
+                      placeholder="Batch Number"
+                      value={addProductsData.batchNumber}
+                      onChange={(e) => {
+                        setAddProductsData({
+                          ...addProductsData,
+                          batchNumber: e.target.value,
+                        });
+                      }}
+                    />
+                    <img
+                      className="w-[18px] h-[18px] absolute md:top-[13px] top-[10px] left-5"
+                      src="/box-add.png"
+                      alt="icon"
+                    />
+                  </div>
+                </div>
+
+                <div className="mb-4">
+                  <p className="text-black text-base font-medium pb-2">
+                    Item-UOM
+                  </p>
+                  <div className="relative">
+                    <input
+                      className="bg-transparent w-full md:h-[46px] h-[40px] pl-12 pr-5 border border-newblack rounded-[10px] outline-none text-black text-base font-light"
+                      type="text"
+                      placeholder="Item-UOM"
+                      value={addProductsData.itemUOM}
+                      onChange={(e) => {
+                        setAddProductsData({
+                          ...addProductsData,
+                          itemUOM: e.target.value,
+                        });
+                      }}
+                    />
+                    <img
+                      className="w-[18px] h-[18px] absolute md:top-[13px] top-[10px] left-5"
+                      src="/box-add.png"
+                      alt="icon"
+                    />
+                  </div>
+                </div>
+
                 <div className="mb-4">
                   <p className="text-black text-base font-medium pb-2">
                     Is Shipment Available

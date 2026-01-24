@@ -179,7 +179,7 @@ const SidePannel = ({ setOpenTab, openTab }) => {
                       }`}
                   >
                     <div className=" py-3 font-semibold flex items-center gap-4">
-                      <div className={`w-6 ml-4 ${router.pathname === item.href ? "text-white" : "text-black"}`}>{item?.img}</div>
+                      <div className={`w-6 ml-4 ${router.pathname === item.href ? "text-white" : "text-black group-hover:text-white"}`}>{item?.img}</div>
                       {item?.title}
                     </div>
                   </Link>
@@ -278,7 +278,7 @@ const SidePannel = ({ setOpenTab, openTab }) => {
                   className=" py-2 pl-6 font-semibold flex items-center gap-4 "
                   onClick={() => setOpenTab(!openTab)}
                 >
-                  <div className={`w-6 ${router.pathname === item.href ? "text-white" : "text-black"}`}>{item?.img}</div>
+                  <div className={`w-6 ${router.pathname === item.href ? "text-white" : "text-black group-hover:text-white"}`}>{item?.img}</div>
                   <Link href={item.href}>{item?.title}</Link>
                 </div>
               </li>
