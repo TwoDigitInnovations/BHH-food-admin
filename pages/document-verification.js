@@ -132,7 +132,7 @@ const DocumentCarousel = ({ documents, onDownload }) => {
 function DocumentVerification(props) {
   const router = useRouter();
   const [usersList, setUsersList] = useState([]);
-  const [user, setUser] = useContext(userContext);
+  const [user] = useContext(userContext);
   const [currentPage, setCurrentPage] = useState(1);
   const [showPendingOnly, setShowPendingOnly] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -374,17 +374,17 @@ function DocumentVerification(props) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white rounded-lg shadow-sm">
+    <section className="w-full h-full bg-gray-50 p-6 overflow-y-scroll scrollbar-hide overflow-scroll pb-28">
+      <div className="max-w-7xl mx-auto">
+        <div className="bg-white rounded-lg shadow-sm overflow-hidden">
           <div className="px-6 py-4 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">
-                  Document Verification
+                  User Management
                 </h1>
                 <p className="text-sm text-gray-600 mt-1">
-                  Review and verify user submitted documents
+                  View and manage all registered users
                 </p>
               </div>
               <div className="flex items-center gap-4">
@@ -397,7 +397,7 @@ function DocumentVerification(props) {
                         : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                     }`}
                   >
-                    Pending Only
+                    With Documents
                   </button>
                   <button
                     onClick={() => setShowPendingOnly(false)}
@@ -411,7 +411,7 @@ function DocumentVerification(props) {
                   </button>
                 </div>
                 <div className="text-sm text-gray-500">
-                  Total: {pagination.totalItems || 0} users {showPendingOnly ? 'pending verification' : 'with documents'}
+                  Total: {pagination.totalItems || 0} users {showPendingOnly ? 'with documents' : 'registered'}
                 </div>
               </div>
             </div>
@@ -419,21 +419,23 @@ function DocumentVerification(props) {
 
           <div className="p-6">
             {usersList.length > 0 ? (
-              <>
+              <div className="overflow-x-auto">
                 <Table
                   columns={columns}
                   data={usersList}
                   pagination={pagination}
                   onPageChange={handlePageChange}
+                  currentPage={currentPage}
+                  itemsPerPage={pagination.itemsPerPage}
                 />
-              </>
+              </div>
             ) : (
               <div className="text-center py-12">
                 <div className="text-gray-400 text-lg mb-2">
-                  {showPendingOnly ? 'No pending documents found' : 'No users with documents found'}
+                  {showPendingOnly ? 'No users with documents found' : 'No users found'}
                 </div>
                 <p className="text-gray-500 text-sm">
-                  {showPendingOnly ? 'All user documents have been reviewed' : 'No users have uploaded documents yet'}
+                  {showPendingOnly ? 'No users have uploaded documents yet' : 'No users have registered yet'}
                 </p>
               </div>
             )}
@@ -577,7 +579,7 @@ function DocumentVerification(props) {
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
 }
 

@@ -98,9 +98,9 @@ export default function Login(props) {
   };
 
   return (
-    <div className="min-h-screen bg-orange-300 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[#fff0dc] flex items-center justify-center p-4">
       {/* Background Pattern */}
-      <div className="absolute inset-0 bg-black/20 bg-opacity-5">
+      <div className="absolute inset-0  bg-opacity-5">
         <div
           className="absolute inset-0"
           style={{
@@ -121,7 +121,7 @@ export default function Login(props) {
                   <ShoppingCart className="w-8 h-8 text-white" />
                 </div>
                 <div className="text-left">
-                  <img src="/Logo2.png" className="h-14 w-full" />
+                  <img src="/newlogo.jpeg" className="h-20 w-full" />
                 </div>
               </div>
             </div>

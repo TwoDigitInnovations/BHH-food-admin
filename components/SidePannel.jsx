@@ -152,16 +152,16 @@ const SidePannel = ({ setOpenTab, openTab }) => {
     <>
       <div className="xl:w-[280px] fixed top-0 left-0 z-20  md:w-[250px] sm:w-[200px] hidden sm:grid grid-rows-5  overflow-hidden">
         <div className="">
-          <div className="bg-[#F38529] py-5 overflow-y-scroll h-screen  scrollbar-hide">
+          <div className="bg-[#fff0dc] py-5 overflow-y-scroll h-screen  scrollbar-hide">
             <div
-              className="bg-[#F38529] pt-5 pb-5 row-span-1 flex items-center justify-center cursor-pointer mx-5 rounded"
+              className="bg-[#fff0dc] pt-5 pb-5 row-span-1 flex items-center justify-center cursor-pointer mx-5 rounded"
               onClick={() => router.push("/")}
             >
               {/* w-full pb-7*/}
               <img
-                src="/Logo2.png"
+                src="/newlogo.jpeg"
                 alt=""
-                className="w-[202px] h-[52px] object-contain"
+                className="w-[300px] h-[78px] object-contain"
               />
             </div>
 
@@ -175,11 +175,11 @@ const SidePannel = ({ setOpenTab, openTab }) => {
                     className={`${item?.access?.includes(user?.type) ? "flex" : "hidden"
                       }  items-center mx-10 cursor-pointer group hover:bg-black hover:text-white m-1 ${router.pathname === item.href
                         ? "bg-black text-white rounded-[8px]"
-                        : "text-white"
+                        : "text-black"
                       }`}
                   >
                     <div className=" py-3 font-semibold flex items-center gap-4">
-                      <div className="w-6 ml-4">{item?.img}</div>
+                      <div className={`w-6 ml-4 ${router.pathname === item.href ? "text-white" : "text-black"}`}>{item?.img}</div>
                       {item?.title}
                     </div>
                   </Link>
@@ -202,9 +202,9 @@ const SidePannel = ({ setOpenTab, openTab }) => {
           <div className="flex flex-col justify-items-start gap-3 w-full  p-3">
             <div className="p-1 rounded overflow-hidden">
               <img
-                src="/Logo2.png"
+                src="/newlogo.jpeg"
                 alt=""
-                className="w-[212px] h-[48px] object-contain"
+                className="w-[310px] h-[75px] object-contain"
               />
             </div>
             <div className="flex ms-2 justify-between">
@@ -272,13 +272,13 @@ const SidePannel = ({ setOpenTab, openTab }) => {
               <li
                 key={i}
                 className={`${item?.access?.includes(user?.type) ? "flex" : "hidden"
-                  } w-full items-center text-white cursor-pointer group hover:bg-black  border-b-2 border-white`}
+                  } w-full items-center cursor-pointer group hover:bg-black hover:text-white border-b-2 border-white ${router.pathname === item.href ? "bg-black text-white" : "text-black"}`}
               >
                 <div
                   className=" py-2 pl-6 font-semibold flex items-center gap-4 "
                   onClick={() => setOpenTab(!openTab)}
                 >
-                  <div className="w-6">{item?.img}</div>
+                  <div className={`w-6 ${router.pathname === item.href ? "text-white" : "text-black"}`}>{item?.img}</div>
                   <Link href={item.href}>{item?.title}</Link>
                 </div>
               </li>

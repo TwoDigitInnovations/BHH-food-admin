@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// const ConstantsUrl = "http://localhost:8000/v1/api/";
-  const ConstantsUrl = "https://api.bhhfood.com/v1/api/";
+//  const ConstantsUrl = "http://localhost:8000/v1/api/";
+   const ConstantsUrl = "https://api.bhhfood.com/v1/api/";
 
 async function Api(method, url, datas, router) {
   let requestData = {};
