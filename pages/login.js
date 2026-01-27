@@ -121,7 +121,7 @@ export default function Login(props) {
                   <ShoppingCart className="w-8 h-8 text-white" />
                 </div>
                 <div className="text-left">
-                  <img src="/newlogo.jpeg" className="h-20 w-full" />
+                  <img src="/newwlogo.png" className="h-20 w-full" />
                 </div>
               </div>
             </div>

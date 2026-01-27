@@ -56,7 +56,7 @@ const Navbar = ({ setOpenTab, openTab }) => {
           <div className="flex items-center">
             <img 
               className="h-14 w-auto object-contain" 
-              src="/newlogo.jpeg"
+              src="/newwlogo.png"
               alt="Logo"
             />
           </div>

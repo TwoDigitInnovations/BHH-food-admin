@@ -159,7 +159,7 @@ const SidePannel = ({ setOpenTab, openTab }) => {
             >
               {/* w-full pb-7*/}
               <img
-                src="/newlogo.jpeg"
+                src="/newwlogo.png"
                 alt=""
                 className="w-[300px] h-[78px] object-contain"
               />
@@ -202,7 +202,7 @@ const SidePannel = ({ setOpenTab, openTab }) => {
           <div className="flex flex-col justify-items-start gap-3 w-full  p-3">
             <div className="p-1 rounded overflow-hidden">
               <img
-                src="/newlogo.jpeg"
+                src="/newwlogo.png"
                 alt=""
                 className="w-[310px] h-[75px] object-contain"
               />
