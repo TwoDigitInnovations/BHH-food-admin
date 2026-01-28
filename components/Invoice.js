@@ -32,7 +32,7 @@ const Invoice = ({ order }) => {
   const orderDateTime = formatOrderDateTime(order?.createdAt);
   console.log(orderDateTime);
 
-  const website = "www.bachhoahouston.com";
+  const website = "www.bhhfood.com";
   const customerName =
     `${order?.Local_address?.name || ""} ${
       order?.Local_address?.lastname || ""
@@ -168,6 +168,49 @@ const Invoice = ({ order }) => {
     pdf.save(`Invoice-${order?.orderId || Date.now()}.pdf`);
   };
 
+  const downloadPicklist = async () => {
+    try {
+      const data = {
+        orderId: order?._id,
+      };
+
+     
+      const token = localStorage.getItem("token");
+      const baseURL = "https://api.bhhfood.com/v1/api/";
+      
+      const response = await fetch(`${baseURL}/createpicklist`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `jwt ${token}`,
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to generate picklist PDF");
+      }
+
+      // Get the PDF blob
+      const blob = await response.blob();
+      
+      // Create download link
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `Picklist-${order?.orderId || Date.now()}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      
+      // Cleanup
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading picklist:", error);
+      alert("Failed to download picklist PDF");
+    }
+  };
+
   let orderType = "Store Pickup";
   if (order?.isLocalDelivery) orderType = "Local Delivery";
   if (order?.isShipmentDelivery) orderType = "Shipment Delivery";
@@ -267,14 +310,26 @@ const Invoice = ({ order }) => {
 
   return (
     <div className="">
-      <div className="relative inline-block">
-        <button
+      <div className="relative inline-flex gap-2">
+        {/* <button
           onClick={downloadInvoice}
           className="inline-flex items-center gap-2 text-gray-700 py-1 px-3 rounded-md cursor-pointer 
                    hover:bg-gray-100 transition-colors duration-200 ease-in-out focus:outline-none 
                    focus:ring-2 focus:ring-gray-300"
           type="button"
           aria-label="Download Invoice"
+        >
+          <span>Invoice</span>
+          <MdFileDownload className="text-xl" />
+        </button> */}
+        
+        <button
+          onClick={downloadPicklist}
+          className="inline-flex items-center gap-2 text-gray-700 py-1 px-3 rounded-md cursor-pointer 
+                   hover:bg-gray-100 transition-colors duration-200 ease-in-out focus:outline-none 
+                   focus:ring-2 focus:ring-gray-300"
+          type="button"
+          aria-label="Download Picklist"
         >
           <span>Invoice</span>
           <MdFileDownload className="text-xl" />
@@ -316,7 +371,7 @@ const Invoice = ({ order }) => {
             <h1
               style={{ fontSize: "2rem", fontWeight: "bold", color: "#f38529" }}
             >
-              BACH HOA HOUSTON
+              BHH FOOD
             </h1>
             <p style={{ fontSize: "0.875rem" }}>{website}</p>
           </div>
@@ -637,8 +692,8 @@ const Invoice = ({ order }) => {
         </div>
 
         <div style={{ marginTop: "2rem", textAlign: "center" }}>
-          <p>Thank you for shopping with BACH HOA HOUSTON</p>
-          <p>For queries, contact us at contact@bachhoahouston.com</p>
+          <p>Thank you for shopping with BHH FOOD</p>
+          <p>For queries, contact us at contact@bhhfood.com</p>
         </div>
       </div>
     </div>

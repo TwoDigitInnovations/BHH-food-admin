@@ -191,12 +191,12 @@ const SidePannel = ({ setOpenTab, openTab }) => {
       </div>
 
       <div
-        className={`w-full absolute top-0 left-0 z-40 sm:hidden flex flex-col h-screen max-h-screen overflow-hidden  bg-[#F38529] ${openTab ? "scale-x-100" : "scale-x-0"
+        className={`w-full absolute top-0 left-0 z-40 sm:hidden flex flex-col h-screen max-h-screen overflow-hidden  bg-[#fff0dc] ${openTab ? "scale-x-100" : "scale-x-0"
           } transition-all duration-300 origin-left`}
       >
-        <div className=" row-span-1  w-full text-white  relative ">
+        <div className=" row-span-1  w-full text-black  relative ">
           <ImCross
-            className="absolute text-white top-4 right-4 z-40 text-2xl"
+            className="absolute text-black top-4 right-4 z-40 text-2xl"
             onClick={() => setOpenTab(!openTab)}
           />
           <div className="flex flex-col justify-items-start gap-3 w-full  p-3">
@@ -217,7 +217,7 @@ const SidePannel = ({ setOpenTab, openTab }) => {
                     onError={imageOnError}
                   />
                 </div>
-                <p className="mt-3 ms-3 text-lg text-white font-bold">
+                <p className="mt-3 ms-3 text-lg text-black font-bold">
                   {user?.username}
                 </p>
               </div>
@@ -248,11 +248,11 @@ const SidePannel = ({ setOpenTab, openTab }) => {
                       });
                     }}
                   >
-                    <div className="text-white text-center flex justify-center items-center">
+                    <div className="text-black text-center flex justify-center items-center">
                       <p className="font-bold">Sign Out</p>
                     </div>
                     <div className=" rounded-full ">
-                      <PiSignOutFill className="text-3xl text-white" />
+                      <PiSignOutFill className="text-3xl text-black" />
                     </div>
                   </div>
                 ) : (
@@ -267,12 +267,12 @@ const SidePannel = ({ setOpenTab, openTab }) => {
           </div>
         </div>
         <div className="flex flex-col justify-center items-start row-span-2 h-full  w-full">
-          <ul className="w-full h-full flex flex-col text-left justify-start items-center border-t-2 border-white">
+          <ul className="w-full h-full flex flex-col text-left justify-start items-center border-t-2 border-black">
             {menuItems.map((item, i) => (
               <li
                 key={i}
                 className={`${item?.access?.includes(user?.type) ? "flex" : "hidden"
-                  } w-full items-center cursor-pointer group hover:bg-black hover:text-white border-b-2 border-white ${router.pathname === item.href ? "bg-black text-white" : "text-black"}`}
+                  } w-full items-center cursor-pointer group hover:bg-black hover:text-white border-b-2 border-black ${router.pathname === item.href ? "bg-black text-white" : "text-black"}`}
               >
                 <div
                   className=" py-2 pl-6 font-semibold flex items-center gap-4 "
