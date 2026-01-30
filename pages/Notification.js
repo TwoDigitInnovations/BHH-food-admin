@@ -83,15 +83,15 @@ function CustomerDashboard(props) {
     const getAllUsers = async (page = 1, limit = 10, searchTerm) => {
         props.loader(true);
         try {
-            let query = `getuserlist?page=${page}&limit=${limit}`;
+            let query = `getuserlist?page=${page}&limit=${limit}&type=USER`;
             if (searchTerm && searchTerm.trim() !== "") {
                 query += `&searchTerm=${encodeURIComponent(searchTerm.trim())}`;
             }
 
             const res = await Api(
-                "post",
+                "get",
                 query,
-                { type: "USER" },
+                "",
                 router
             );
 

@@ -32,7 +32,6 @@ const Invoice = ({ order }) => {
   const orderDateTime = formatOrderDateTime(order?.createdAt);
   console.log(orderDateTime);
 
-  const website = "www.bhhfood.com";
   const customerName =
     `${order?.Local_address?.name || ""} ${
       order?.Local_address?.lastname || ""
@@ -169,6 +168,51 @@ const Invoice = ({ order }) => {
   };
 
   const downloadPicklist = async () => {
+    try {
+      const data = {
+        orderId: order?._id,
+        id: order?.orderId,
+        lang: 'en'
+      };
+
+     
+      const token = localStorage.getItem("token");
+      const baseURL = "https://api.bhhfood.com/v1/api/";
+      
+      const response = await fetch(`${baseURL}/createinvoice`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `jwt ${token}`,
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to generate invoice PDF");
+      }
+
+      // Get the PDF blob
+      const blob = await response.blob();
+      
+      // Create download link
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `Invoice-${order?.orderId || Date.now()}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      
+      // Cleanup
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading invoice:", error);
+      alert("Failed to download invoice PDF");
+    }
+  };
+
+  const downloadActualPicklist = async () => {
     try {
       const data = {
         orderId: order?._id,
@@ -312,7 +356,7 @@ const Invoice = ({ order }) => {
     <div className="">
       <div className="relative inline-flex gap-2">
         {/* <button
-          onClick={downloadInvoice}
+          onClick={downloadPicklist}
           className="inline-flex items-center gap-2 text-gray-700 py-1 px-3 rounded-md cursor-pointer 
                    hover:bg-gray-100 transition-colors duration-200 ease-in-out focus:outline-none 
                    focus:ring-2 focus:ring-gray-300"
@@ -324,12 +368,12 @@ const Invoice = ({ order }) => {
         </button> */}
         
         <button
-          onClick={downloadPicklist}
+          onClick={downloadActualPicklist}
           className="inline-flex items-center gap-2 text-gray-700 py-1 px-3 rounded-md cursor-pointer 
                    hover:bg-gray-100 transition-colors duration-200 ease-in-out focus:outline-none 
                    focus:ring-2 focus:ring-gray-300"
           type="button"
-          aria-label="Download Picklist"
+          aria-label="Download Invoice"
         >
           <span>Invoice</span>
           <MdFileDownload className="text-xl" />
@@ -369,11 +413,28 @@ const Invoice = ({ order }) => {
         >
           <div>
             <h1
-              style={{ fontSize: "2rem", fontWeight: "bold", color: "#f38529" }}
+              style={{ 
+                fontSize: "2rem", 
+                fontWeight: "bold", 
+                color: "#f38529",
+                cursor: "pointer",
+                textDecoration: "underline"
+              }}
+              onClick={() => window.open("https://www.bhhfood.com", "_blank")}
             >
               BHH FOOD
             </h1>
-            <p style={{ fontSize: "0.875rem" }}>{website}</p>
+            <p 
+              style={{ 
+                fontSize: "0.875rem",
+                cursor: "pointer",
+                color: "#f38529",
+                textDecoration: "underline"
+              }}
+              onClick={() => window.open("https://www.bhhfood.com", "_blank")}
+            >
+              Shop Everyday Essentials at BHH FOOD | www.bhhfood.com
+            </p>
           </div>
           <div style={{ textAlign: "right" }}>
             <p style={{ fontSize: "1.2rem", color: "#f38529" }}>
@@ -684,7 +745,12 @@ const Invoice = ({ order }) => {
               <span style={{ width: "100px", textAlign: "right" }}>
                 $
                 {parseFloat(
-                  Number(order.total) + (Number(order?.totalTax) || 0)
+                  Number(order.total) + 
+                  (Number(order?.totalTax) || 0) + 
+                  (Number(order?.serviceFee) || 0) + 
+                  (Number(order?.Deliverytip) || 0) + 
+                  (Number(order?.deliveryfee) || 0) - 
+                  (Number(order?.discount) || 0)
                 ).toFixed(2)}
               </span>
             </div>
