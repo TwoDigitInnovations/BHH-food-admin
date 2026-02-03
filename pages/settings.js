@@ -191,6 +191,7 @@ function Settings(props) {
   const [currentMinServicesCost, setCurrentMinServicesCost] = useState("");
   const [currentServicesCost, setCurrentServicesCost] = useState("");
   const [isServices, setIsServices] = useState("");
+  const [shippingCostsExist, setShippingCostsExist] = useState(false);
 
   useEffect(() => {
     getShippingCosts();
@@ -199,7 +200,7 @@ function Settings(props) {
   const getShippingCosts = async () => {
     props.loader(true);
     try {
-      const res = await Api("get", "getShippingCost", null, props.router);
+      const res = await Api("get", "getShippingCost", null, router);
       props.loader(false);
 
       if (res.shippingCosts && res.shippingCosts.length > 0) {
@@ -211,13 +212,21 @@ function Settings(props) {
         setMinCurrentShipmentCost(costs.minShipmentCostForShipment || 0);
         setCurrentServicesCost(costs?.serviesCost || 0);
         setCurrentMinServicesCost(costs?.minServiesCost || 0);
+        setShippingCostsExist(true);
+      } else {
+        setShippingCostsExist(false);
       }
     } catch (err) {
       props.loader(false);
-      props.toaster({
-        type: "error",
-        message: err?.message || "Failed to fetch shipping costs",
-      });
+      // If error is "No shipping costs found", it's not really an error for our logic
+      if (err?.message === "No shipping costs found") {
+        setShippingCostsExist(false);
+      } else {
+        props.toaster({
+          type: "error",
+          message: err?.message || "Failed to fetch shipping costs",
+        });
+      }
     }
   };
 
@@ -253,19 +262,15 @@ function Settings(props) {
             : currentMinServicesCost,
       };
 
-      const method =
-        isEditingLocal || isEditingShipment || isServices || isEditingMessage
-          ? "updateShippingCost"
-          : "addShippingCost";
-      const res = await Api("post", method, payload, props.router);
+      const method = shippingCostsExist ? "updateShippingCost" : "addShippingCost";
+      
+      const res = await Api("post", method, payload, router);
 
       props.loader(false);
       props.toaster({
         type: "success",
         message: `Shipping Costs ${
-          isEditingLocal || isEditingShipment || isServices || isEditingMessage
-            ? "Updated"
-            : "Added"
+          shippingCostsExist ? "Updated" : "Added"
         } Successfully`,
       });
 
@@ -743,12 +748,7 @@ function Settings(props) {
                     onClick={handleSubmit}
                     className="text-white bg-[#F38529] hover:bg-[#e47a1f] transition-colors rounded-lg text-md font-medium py-2.5 px-6 shadow-sm"
                   >
-                    {isEditingLocal ||
-                    isEditingShipment ||
-                    isEditingMessage ||
-                    isServices
-                      ? "Update "
-                      : "Add "}
+                    {shippingCostsExist ? "Update " : "Add "}
                   </button>
                 </div>
               </div>
