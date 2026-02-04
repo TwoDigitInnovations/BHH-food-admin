@@ -696,18 +696,56 @@ function Orders(props) {
     );
   }
 
-  function date({ value }) {
+  function date({ value, row }) {
+    // Use createdAt if available, otherwise use orderDate
+    const order = row?.original;
+    if (order?.createdAt) {
+      const date = new Date(order.createdAt);
+      return (
+        <div>
+          <p className="text-black text-base font-normal text-center">
+            {date.toLocaleDateString('en-US', {
+              timeZone: 'America/Chicago', // Always use Houston time
+              month: '2-digit',
+              day: '2-digit', 
+              year: 'numeric'
+            })}
+          </p>
+        </div>
+      );
+    }
+    
+    // Fallback to orderDate
     return (
       <div>
-        <p className="text-black text-base font-normal text-center">{value}</p>
+        <p className="text-black text-base font-normal text-center">{value || '-'}</p>
       </div>
     );
   }
 
-  function time({ value }) {
+  function time({ value, row }) {
+    // Use createdAt if available, otherwise use orderTime
+    const order = row?.original;
+    if (order?.createdAt) {
+      const date = new Date(order.createdAt);
+      return (
+        <div>
+          <p className="text-black text-base font-normal text-center">
+            {date.toLocaleTimeString('en-US', {
+              timeZone: 'America/Chicago', // Always use Houston time
+              hour: '2-digit',
+              minute: '2-digit',
+              hour12: true
+            })}
+          </p>
+        </div>
+      );
+    }
+    
+    // Fallback to orderTime
     return (
       <div>
-        <p className="text-black text-base font-normal text-center">{value}</p>
+        <p className="text-black text-base font-normal text-center">{value || '-'}</p>
       </div>
     );
   }
